@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/Aspire/">
+    <Project Path="MyTime.AppHost/MyTime.AppHost.csproj" />
+    <Project Path="MyTime.ServiceDefaults/MyTime.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/Features/">
+    <Project Path="MyTime.Shifts.Contracts/MyTime.Shifts.Contracts.csproj" Id="dbd0afef-35e8-4e51-991e-2c311141ad65" />
+    <Project Path="MyTime.Shifts/MyTime.Shifts.csproj" Id="7ab07f18-e43e-4657-919d-d1eefef6542e" />
+  </Folder>
+  <Folder Name="/Test/">
+    <Project Path="MyTime.Tests/MyTime.Tests.csproj" />
+  </Folder>
+  <Project Path="MyTime.ApiService/MyTime.ApiService.csproj" />
+  <Project Path="MyTime.Shared/MyTime.Shared.csproj" />
+  <Project Path="MyTime.Web/MyTime.Web.csproj" />
+</Solution>

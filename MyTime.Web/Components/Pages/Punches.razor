@@ -1,0 +1,49 @@
+﻿@page "/punches"
+@using Microsoft.AspNetCore.Components.Authorization
+@using MyTime.Shifts.Contracts.Responses
+@attribute [StreamRendering(true)]
+@attribute [OutputCache(Duration = 5)]
+
+@inject PunchApiClient PunchApi
+
+<PageTitle>Punches</PageTitle>
+
+<h1>Punches</h1>
+
+@if (punches is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Approval Status</th>
+                <th>Approved By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var punch in punches)
+            {
+                <tr>
+                    <td>@punch.RecordedTime.ToLocalTime()</td>
+                    <td>@(punch.IsApproved is null ? "pending"
+                        : (@punch.IsApproved is true ? "approved" : "denied"))
+                    </td>
+                    <td>@punch.ApprovedByUser</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private PunchResponse[]? punches;
+
+    protected override async Task OnInitializedAsync()
+    {
+        punches = await PunchApi.GetAllPunchesAsync();
+    }
+}
