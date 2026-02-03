@@ -20,6 +20,7 @@ else
         <thead>
             <tr>
                 <th>Time</th>
+                <th>Type</th>
                 <th>Approval Status</th>
                 <th>Approved By</th>
             </tr>
@@ -29,6 +30,7 @@ else
             {
                 <tr>
                     <td>@punch.RecordedTime.ToLocalTime()</td>
+                    <td>@(punch.PunchType == Shared.Model.Enums.PunchType.In ? "In" : "Out")</td>
                     <td>@(punch.IsApproved is null ? "pending"
                         : (@punch.IsApproved is true ? "approved" : "denied"))
                     </td>

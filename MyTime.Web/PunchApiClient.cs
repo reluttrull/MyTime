@@ -1,4 +1,5 @@
-﻿using MyTime.Shifts.Contracts.Responses;
+﻿using MyTime.Shifts.Contracts.Requests;
+using MyTime.Shifts.Contracts.Responses;
 
 namespace MyTime.Web;
 
@@ -19,5 +20,18 @@ public class PunchApiClient(HttpClient httpClient)
 
         await Task.Delay(500, cancellationToken);
         return punches?.ToArray() ?? [];
+    }
+
+    public async Task<PunchResponse?> CreatePunchAsync(CancellationToken cancellationToken = default)
+    {
+        CreatePunchRequest request = new(1);
+        var response = await httpClient.PostAsJsonAsync("/punches", request, cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+        {
+            PunchResponse? createdPunch = await response.Content.ReadFromJsonAsync<PunchResponse?>(cancellationToken: cancellationToken);
+            return createdPunch;
+        }
+        else return null;
     }
 }

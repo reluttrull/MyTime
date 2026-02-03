@@ -3,6 +3,7 @@ using MyTime.ApiService;
 using MyTime.Shared.Data;
 using MyTime.Shared.Extensions;
 using MyTime.Shifts;
+using MyTime.Shifts.Contracts.Requests;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,12 @@ app.MapGet("/punches/me", async (IPunchService service, CancellationToken ct) =>
     return mockPunches.Select(p => p.MapToResponse());
 })
 .WithName("GetAllPunches");
+
+app.MapPost("/punches", async (CreatePunchRequest req, IPunchService service, CancellationToken ct) =>
+{
+    var createdPunch = await service.CreatePunchAsync(req.MapFromRequest(), token: ct);
+    return Results.Created($"/punches/{createdPunch.Id}", createdPunch.MapToResponse());
+});
 
 app.MapDefaultEndpoints();
 

@@ -28,8 +28,8 @@ namespace MyTime.Shared.Extensions
                     {
                         var existingPunch1 = context.Find(typeof(Punch), 1);
                         var existingPunch2 = context.Find(typeof(Punch), 2);
-                        Punch punch1 = new() { Id = 1, PunchedUserId = 1, PunchedTime = DateTime.UtcNow.AddHours(-5), PunchType = Enums.PunchType.In };
-                        Punch punch2 = new() { Id = 2, PunchedUserId = 1, PunchedTime = DateTime.UtcNow.AddHours(-1), PunchType = Enums.PunchType.Out };
+                        Punch punch1 = new() { PunchedUserId = 1, PunchedTime = DateTime.UtcNow.AddHours(-5), PunchType = Enums.PunchType.In };
+                        Punch punch2 = new() { PunchedUserId = 1, PunchedTime = DateTime.UtcNow.AddHours(-1), PunchType = Enums.PunchType.Out };
                         if (existingPunch1 is null) context.Add(punch1);
                         if (existingPunch2 is null) context.Add(punch2);
                         context.SaveChanges();

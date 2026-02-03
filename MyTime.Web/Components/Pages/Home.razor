@@ -1,7 +1,21 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@using MyTime.Shifts.Contracts.Responses
+@inject PunchApiClient PunchApi
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<button @onclick="Punch">Punch</button>
 
-Welcome to your new app.
+@if (createdPunch is not null)
+{
+    <div>Punched!</div>
+}
+
+@code {
+    private PunchResponse? createdPunch;
+    private async Task Punch()
+    {
+        createdPunch = await PunchApi.CreatePunchAsync();
+    }
+}
