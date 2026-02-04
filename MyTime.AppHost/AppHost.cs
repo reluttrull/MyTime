@@ -4,16 +4,10 @@ var postgres = builder.AddPostgres("postgres");
 
 var db = postgres.AddDatabase("mytimedb");
 
-var apiService = builder.AddProject<Projects.MyTime_ApiService>("apiservice")
+builder.AddProject<Projects.MyTime_Web>("webfrontend")
+    .WithExternalHttpEndpoints()
     .WaitFor(db)
     .WithReference(db)
     .WithHttpHealthCheck("/health");
-
-builder.AddProject<Projects.MyTime_Web>("webfrontend")
-    .WithExternalHttpEndpoints()
-    .WithHttpHealthCheck("/health")
-    .WithReference(db)
-    .WithReference(apiService)
-    .WaitFor(apiService);
 
 builder.Build().Run();
