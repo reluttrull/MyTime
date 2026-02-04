@@ -7,18 +7,47 @@
 
 <PageTitle>Home</PageTitle>
 
+@if (lastPunch is not null) 
+{
+    <div>Last punch at @lastPunch.RecordedTime.ToLocalTime()</div>
+}
 <button @onclick="Punch">Punch</button>
 
 @if (createdPunch is not null)
 {
-    <div>Punched!</div>
+    <div>Punched @(createdPunch.PunchType)!</div>
+    <button @onclick="RemoveLastPunch">Undo</button>
 }
+@message
 
 @code {
     private PunchResponse? createdPunch;
+    private PunchResponse? lastPunch;
+    private string? message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetLastPunch();
+    }
+
+    private async Task GetLastPunch()
+    {
+        lastPunch = await PunchService.GetLastPunchForUserAsync(1); // todo: use real userid
+    }
     private async Task Punch()
     {
         CreatePunchRequest request = new(1);
         createdPunch = await PunchService.CreatePunchAsync(request);
+        if (createdPunch is not null) lastPunch = createdPunch;
+    }
+    private async Task RemoveLastPunch()
+    {
+        var success = await PunchService.DeletePunchAsync(createdPunch.Id);
+        if (success)
+        {
+            createdPunch = null;
+            message = "Punch successfully removed!";
+        }
+        await GetLastPunch();
     }
 }
