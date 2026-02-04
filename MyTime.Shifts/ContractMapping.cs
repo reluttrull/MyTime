@@ -2,7 +2,7 @@
 using MyTime.Shifts.Contracts.Requests;
 using MyTime.Shifts.Contracts.Responses;
 
-namespace MyTime.ApiService
+namespace MyTime.Shifts
 {
     public static class ContractMapping
     {

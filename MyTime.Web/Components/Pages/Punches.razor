@@ -1,10 +1,11 @@
 ﻿@page "/punches"
 @using Microsoft.AspNetCore.Components.Authorization
+@using MyTime.Shifts
 @using MyTime.Shifts.Contracts.Responses
 @attribute [StreamRendering(true)]
 @attribute [OutputCache(Duration = 5)]
 
-@inject PunchApiClient PunchApi
+@inject IPunchService PunchService
 
 <PageTitle>Punches</PageTitle>
 
@@ -42,10 +43,10 @@ else
 }
 
 @code {
-    private PunchResponse[]? punches;
+    private List<PunchResponse> punches = [];
 
     protected override async Task OnInitializedAsync()
     {
-        punches = await PunchApi.GetAllPunchesAsync();
+        punches = await PunchService.GetAllPunchesAsync(null);
     }
 }

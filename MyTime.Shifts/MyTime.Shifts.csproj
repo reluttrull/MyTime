@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MyTime.Shared\MyTime.Shared.csproj" />
+    <ProjectReference Include="..\MyTime.Shifts.Contracts\MyTime.Shifts.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

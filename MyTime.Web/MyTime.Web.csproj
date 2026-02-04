@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MyTime.ServiceDefaults\MyTime.ServiceDefaults.csproj" />
     <ProjectReference Include="..\MyTime.Shifts.Contracts\MyTime.Shifts.Contracts.csproj" />
+    <ProjectReference Include="..\MyTime.Shifts\MyTime.Shifts.csproj" />
   </ItemGroup>
 
 </Project>

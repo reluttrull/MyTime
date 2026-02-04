@@ -12,6 +12,7 @@ var apiService = builder.AddProject<Projects.MyTime_ApiService>("apiservice")
 builder.AddProject<Projects.MyTime_Web>("webfrontend")
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
+    .WithReference(db)
     .WithReference(apiService)
     .WaitFor(apiService);
 

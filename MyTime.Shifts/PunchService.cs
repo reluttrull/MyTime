@@ -2,6 +2,8 @@
 using MyTime.Shared.Data;
 using MyTime.Shared.Extensions;
 using MyTime.Shared.Model;
+using MyTime.Shifts.Contracts.Requests;
+using MyTime.Shifts.Contracts.Responses;
 
 namespace MyTime.Shifts
 {
@@ -9,9 +11,10 @@ namespace MyTime.Shifts
     {
         private readonly MyTimeDbContext _context = context;
 
-        public async Task<Punch> CreatePunchAsync(Punch punch, CancellationToken token = default)
+        public async Task<PunchResponse> CreatePunchAsync(CreatePunchRequest request, CancellationToken token = default)
         {
-            Punch? lastPunch = await GetLastPunchForUserAsync(punch.PunchedUserId, token);
+            Punch punch = request.MapFromRequest();
+            PunchResponse? lastPunch = await GetLastPunchForUserAsync(punch.PunchedUserId, token);
             punch.PunchType = lastPunch is null 
                 ? Enums.PunchType.In 
                 : (lastPunch.PunchType == Enums.PunchType.In 
@@ -20,8 +23,8 @@ namespace MyTime.Shifts
             // todo: if punch out, also create event "CompletedShift"
             _context.Punches.Add(punch);
             await _context.SaveChangesAsync(cancellationToken: token);
-            Punch? createdPunch = await GetPunchByIdAsync(punch.Id, token);
-            return createdPunch ?? punch;
+            PunchResponse? createdPunch = await GetPunchByIdAsync(punch.Id, token);
+            return createdPunch ?? punch.MapToResponse();
         }
 
         public async Task<bool> DeletePunchAsync(int id, CancellationToken token = default)
@@ -34,34 +37,37 @@ namespace MyTime.Shifts
             return true;
         }
 
-        public async Task<List<Punch>> GetAllPunchesAsync(int? userId, CancellationToken token = default)
+        public async Task<List<PunchResponse>> GetAllPunchesAsync(int? userId, CancellationToken token = default)
         {
             return await _context.Punches
                 .WhereIf(userId is not null, p => p.PunchedUserId == userId)
                 .OrderByDescending(p => p.PunchedTime)
-                .ToListAsync<Punch>(token);
+                .Select(p => p.MapToResponse())
+                .ToListAsync<PunchResponse>(token);
         }
 
-        public async Task<Punch?> GetLastPunchForUserAsync(int userId, CancellationToken token = default)
+        public async Task<PunchResponse?> GetLastPunchForUserAsync(int userId, CancellationToken token = default)
         {
-            return await _context.Punches
+            var lastPunch = await _context.Punches
                 .OrderByDescending(p => p.PunchedTime)
                 .FirstOrDefaultAsync(p => p.PunchedUserId == userId, cancellationToken: token);
+            return lastPunch?.MapToResponse();
         }
 
-        public async Task<Punch?> GetPunchByIdAsync(int id, CancellationToken token = default)
+        public async Task<PunchResponse?> GetPunchByIdAsync(int id, CancellationToken token = default)
         {
-            return await _context.Punches
+            var punch = await _context.Punches
                 .FirstOrDefaultAsync(p => p.Id == id, cancellationToken: token);
+            return punch?.MapToResponse();
         }
     }
 
     public interface IPunchService
     {
-        Task<Punch?> GetLastPunchForUserAsync(int userId, CancellationToken token = default);
-        Task<Punch?> GetPunchByIdAsync(int id, CancellationToken token = default);
-        Task<List<Punch>> GetAllPunchesAsync(int? userId, CancellationToken token = default);
-        Task<Punch> CreatePunchAsync(Punch punch, CancellationToken token = default);
+        Task<PunchResponse?> GetLastPunchForUserAsync(int userId, CancellationToken token = default);
+        Task<PunchResponse?> GetPunchByIdAsync(int id, CancellationToken token = default);
+        Task<List<PunchResponse>> GetAllPunchesAsync(int? userId, CancellationToken token = default);
+        Task<PunchResponse> CreatePunchAsync(CreatePunchRequest request, CancellationToken token = default);
         Task<bool> DeletePunchAsync(int id, CancellationToken token = default);
     }
 }

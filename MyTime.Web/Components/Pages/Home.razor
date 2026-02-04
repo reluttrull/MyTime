@@ -1,7 +1,9 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@using MyTime.Shifts
+@using MyTime.Shifts.Contracts.Requests
 @using MyTime.Shifts.Contracts.Responses
-@inject PunchApiClient PunchApi
+@inject IPunchService PunchService
 
 <PageTitle>Home</PageTitle>
 
@@ -16,6 +18,7 @@
     private PunchResponse? createdPunch;
     private async Task Punch()
     {
-        createdPunch = await PunchApi.CreatePunchAsync();
+        CreatePunchRequest request = new(1);
+        createdPunch = await PunchService.CreatePunchAsync(request);
     }
 }
