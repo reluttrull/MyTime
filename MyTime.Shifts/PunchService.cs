@@ -41,7 +41,7 @@ namespace MyTime.Shifts
         {
             return await _context.Punches
                 .WhereIf(userId is not null, p => p.PunchedUserId == userId)
-                .OrderByDescending(p => p.PunchedTime)
+                .OrderByDescending(p => p.PunchedTimeUtc)
                 .Select(p => p.MapToResponse())
                 .ToListAsync<PunchResponse>(token);
         }
@@ -49,7 +49,7 @@ namespace MyTime.Shifts
         public async Task<PunchResponse?> GetLastPunchForUserAsync(int userId, CancellationToken token = default)
         {
             var lastPunch = await _context.Punches
-                .OrderByDescending(p => p.PunchedTime)
+                .OrderByDescending(p => p.PunchedTimeUtc)
                 .FirstOrDefaultAsync(p => p.PunchedUserId == userId, cancellationToken: token);
             return lastPunch?.MapToResponse();
         }

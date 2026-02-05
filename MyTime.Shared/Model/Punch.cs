@@ -8,7 +8,7 @@ namespace MyTime.Shared.Model
     public class Punch : Entity
     {
         public int PunchedUserId { get; set; }
-        public DateTime PunchedTime { get; set; }
+        public DateTime PunchedTimeUtc { get; set; }
         public PunchType PunchType { get; set; }
     }
 }

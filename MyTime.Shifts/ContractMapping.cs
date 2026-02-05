@@ -11,13 +11,13 @@ namespace MyTime.Shifts
             return new Punch
             {
                 PunchedUserId = request.UserId,
-                PunchedTime = DateTime.UtcNow
+                PunchedTimeUtc = DateTime.UtcNow
             };
         }
 
         public static PunchResponse MapToResponse(this Punch punch)
         {
-            return new PunchResponse(punch.Id, punch.PunchedUserId, punch.PunchedTime, punch.PunchType, null, null);
+            return new PunchResponse(punch.Id, punch.PunchedUserId, punch.PunchedTimeUtc, punch.PunchType, null, null);
         }
     }
 }
