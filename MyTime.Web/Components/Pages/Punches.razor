@@ -2,6 +2,8 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using MyTime.Shifts
 @using MyTime.Shifts.Contracts.Responses
+
+@rendermode InteractiveServer
 @attribute [StreamRendering(true)]
 @attribute [OutputCache(Duration = 5)]
 
@@ -10,6 +12,13 @@
 <PageTitle>Punches</PageTitle>
 
 <h1>Punches</h1>
+
+@* for testing *@
+
+<select value="@userId" @onchange="UserChanged">
+    <option value=1>User 1</option>
+    <option value=2>User 2</option>
+</select>
 
 @if (punches is null)
 {
@@ -43,10 +52,17 @@ else
 }
 
 @code {
-    private List<PunchResponse> punches = [];
+    private int userId = 1;
 
     protected override async Task OnInitializedAsync()
     {
-        punches = await PunchService.GetAllPunchesAsync(null);
+        punches = await PunchService.GetAllPunchesAsync(userId);
     }
+
+    public async Task UserChanged(ChangeEventArgs e)
+    {
+        int.TryParse(e?.Value?.ToString(), out userId);
+        punches = await PunchService.GetAllPunchesAsync(userId);
+    }
+    private List<PunchResponse> punches = [];
 }

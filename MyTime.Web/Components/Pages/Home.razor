@@ -3,4 +3,13 @@
 @rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
-<Punch />
+@* for testing *@
+<select @bind="userId">
+    <option value=1>User 1</option>
+    <option value=2>User 2</option>
+</select>
+<Punch UserId="@userId" />
+
+@code {
+    private int userId = 1;
+}

@@ -5,7 +5,7 @@
 
 @if (lastPunch is not null)
 {
-    <div>Last punch at @lastPunch.RecordedTime.ToLocalTime()</div>
+    <div>Last punch for user @UserId at @lastPunch.RecordedTime.ToLocalTime()</div>
 }
 <button @onclick="CreatePunch">Punch</button>
 
@@ -17,22 +17,25 @@
 @message
 
 @code {
+    [Parameter]
+    public int UserId { get; set; }
+
     private PunchResponse? createdPunch;
     private PunchResponse? lastPunch;
     private string? message;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         await GetLastPunch();
     }
 
     private async Task GetLastPunch()
     {
-        lastPunch = await PunchService.GetLastPunchForUserAsync(1); // todo: use real userid
+        lastPunch = await PunchService.GetLastPunchForUserAsync(UserId); // todo: use real userid
     }
     private async Task CreatePunch()
     {
-        CreatePunchRequest request = new(1);
+        CreatePunchRequest request = new(UserId);
         createdPunch = await PunchService.CreatePunchAsync(request);
         if (createdPunch is not null) lastPunch = createdPunch;
     }
